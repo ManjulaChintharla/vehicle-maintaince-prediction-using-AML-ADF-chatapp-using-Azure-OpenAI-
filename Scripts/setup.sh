@@ -6,7 +6,7 @@ suffix=${guid//[-]/}
 suffix=${suffix:0:18}
 
 # Set the necessary variables
-RESOURCE_GROUP="rg-contosofleetguard -l${suffix}"
+RESOURCE_GROUP="rg-contosofleetguard-l${suffix}"
 RESOURCE_PROVIDER="Microsoft.MachineLearningServices"
 RESOURCE_PROVIDER1="Microsoft.PolicyInsights"
 RESOURCE_PROVIDER2="Microsoft.Cdn"
@@ -17,7 +17,7 @@ RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
 WORKSPACE_NAME="mlw-cfg-l${suffix}"
 COMPUTE_INSTANCE="cfg-ci${suffix}"
 COMPUTE_CLUSTER="cfg-aml-cluster"
-ADF_NAME="adf-cfg-datafactory${suffix}"
+ADF_NAME="adf-cfg-df${suffix}"
 Azure_POSTGRESQL_NAME="azpostsql-cfg-psql${suffix}"
 USERNAME="citus"
 PASSWORD="AZpsql12345"
