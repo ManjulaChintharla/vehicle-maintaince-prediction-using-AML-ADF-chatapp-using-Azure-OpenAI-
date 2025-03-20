@@ -6,7 +6,7 @@ suffix=${guid//[-]/}
 suffix=${suffix:0:18}
 
 # Set the necessary variables
-RESOURCE_GROUP="rg-contosobank-l${suffix}"
+RESOURCE_GROUP="rg-contosofleetguard -l${suffix}"
 RESOURCE_PROVIDER="Microsoft.MachineLearningServices"
 RESOURCE_PROVIDER1="Microsoft.PolicyInsights"
 RESOURCE_PROVIDER2="Microsoft.Cdn"
@@ -14,9 +14,13 @@ RESOURCE_PROVIDER3="Microsoft.AlertsManagement"
 RESOURCE_PROVIDER4="Microsoft.Web"
 REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
-WORKSPACE_NAME="mlw-cb-l${suffix}"
-COMPUTE_INSTANCE="cb-ci${suffix}"
-COMPUTE_CLUSTER="cb-aml-cluster"
+WORKSPACE_NAME="mlw-cfg-l${suffix}"
+COMPUTE_INSTANCE="cfg-ci${suffix}"
+COMPUTE_CLUSTER="cfg-aml-cluster"
+ADF_NAME="adf-cfg-datafactory${suffix}"
+Azure_POSTGRESQL_NAME="azpostsql-cfg-psql${suffix}"
+USERNAME="citus"
+PASSWORD="AZpsql12345"
 
 
 
@@ -44,4 +48,13 @@ az ml compute create --name ${COMPUTE_INSTANCE} --size STANDARD_DS11_V2 --type C
 # Create compute cluster
 echo "Creating a compute cluster with name: " $COMPUTE_CLUSTER
 az ml compute create --name ${COMPUTE_CLUSTER} --size STANDARD_DS11_V2 --max-instances 2 --type AmlCompute 
+
+# Create Azure data factory
+echo "Creating a Azure data factory with name: " $ADF_NAME
+az datafactory create --resource-group $RESOURCE_GROUP --factory-name $ADF_NAME
+
+
+# Create Azure Database for postgresql
+echo "Creating a Azure data base for postgresql with name: " $Azure_POSTGRESQL_NAME
+az postgres flexible-server create --location $RANDOM_REGION --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --public-access 153.24.26.117 --storage-size 128 --tags "key=value" --version 14 --high-availability ZoneRedundant --zone 1 --standby-zone 3
 
