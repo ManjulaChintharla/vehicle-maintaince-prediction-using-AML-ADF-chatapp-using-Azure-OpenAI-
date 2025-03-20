@@ -3,7 +3,7 @@
 # Create random string
 guid=$(cat /proc/sys/kernel/random/uuid)
 suffix=${guid//[-]/}
-suffix=${suffix:0:18}
+suffix=${suffix:0:8}
 
 # Set the necessary variables
 RESOURCE_GROUP="rg-contosofleetguard-l${suffix}"
