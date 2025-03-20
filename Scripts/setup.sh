@@ -56,6 +56,7 @@ az datafactory create --resource-group $RESOURCE_GROUP --factory-name $ADF_NAME
 
 # Create Azure Database for postgresql
 echo "Creating a Azure data base for postgresql with name: " $Azure_POSTGRESQL_NAME
-az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --public-access 153.24.26.117 --storage-size 128 --tags "key=value" --version 14 --high-availability "Disabled (99.9% SLA)" --authentication-type "PostgreSQL authentication only"  --zone 1 --standby-zone 3
+#az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --public-access 153.24.26.117 --storage-size 128 --tags "key=value" --version 14 --high-availability "Disabled (99.9% SLA)" --authentication-type "PostgreSQL authentication only"  --zone 1 --standby-zone 3
+#az postgres flexible-server create --location westus  --resource-group rg-contosofleetguard-lda7fb0dd0daa488499 --name azpostsql-cfg-psql499  --admin-user citus --admin-password Fhtest208  --sku-name Standard_D2s_v3 --tier GeneralPurpose --public-access 153.24.26.117 --storage-size 128 --tags "128" --version 14 --high-availability Disabled
 echo "Username of postgresql is  " $USERNAME
 echo "Password of postgresql is  " $PASSWORD
