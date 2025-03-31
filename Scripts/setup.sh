@@ -58,14 +58,13 @@ az datafactory create --resource-group $RESOURCE_GROUP --factory-name $ADF_NAME
 # Assign the managed identity ID to a variable
 ManagedIdentityId=$(az datafactory show --name $ADF_NAME --resource-group $RESOURCE_GROUP --query identity.principalId --output tsv)
 
-# Create a Key Vault policy using the managed identity ID
-az keyvault set-policy --name <KeyVaultName> --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
 
 # Search for the Key Vault by name
 keyVaultName=$(az keyvault list --query "[?contains(name, 'amlwscfgkeyvault')].name | [0]" --output tsv)
 
-# Assign the Key Vault name to a variable
-keyVaultName=$(az keyvault list --query "[?contains(name, '<KeyVaultNamePattern>')].name | [0]" --output tsv)
+# Create a Key Vault policy using the managed identity ID
+#az keyvault set-policy --name <KeyVaultName> --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
+
 
 # Create a Key Vault policy using the Key Vault name
 az keyvault set-policy --name $keyVaultName --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
