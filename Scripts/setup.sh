@@ -49,7 +49,7 @@ az ml compute create --name ${COMPUTE_INSTANCE} --size Standard_DS3_v2 --type Co
 echo "Creating a compute cluster with name: " $COMPUTE_CLUSTER
 az ml compute create --name ${COMPUTE_CLUSTER} --size Standard_DS3_v2 --max-instances 2 --type AmlCompute 
 
-az config set extension.dynamic_install_allow_preview=true or false
+az config set extension.use_dynamic_install=yes_without_prompt
 
 # Create Azure data factory
 echo "Creating a Azure data factory with name: " $ADF_NAME
