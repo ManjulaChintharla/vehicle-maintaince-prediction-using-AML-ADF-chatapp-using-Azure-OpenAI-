@@ -3,7 +3,7 @@
 # Create random string
 guid=$(cat /proc/sys/kernel/random/uuid)
 suffix=${guid//[-]/}
-suffix=${suffix:0:8}
+suffix=${suffix:0:5}
 
 # Set the necessary variables
 RESOURCE_GROUP="rg-contosofleetguard-l${suffix}"
@@ -12,12 +12,12 @@ RESOURCE_PROVIDER1="Microsoft.PolicyInsights"
 RESOURCE_PROVIDER2="Microsoft.Cdn"
 RESOURCE_PROVIDER3="Microsoft.AlertsManagement"
 RESOURCE_PROVIDER4="Microsoft.Web"
-REGIONS=("eastus" "centralus")
+REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
-WORKSPACE_NAME="mlw-cfg-ws${suffix}"
-COMPUTE_INSTANCE="cfg-ci${suffix}"
-COMPUTE_CLUSTER="cfg-aml-cluster"
-ADF_NAME="adf-cfg-df${suffix}"
+WORKSPACE_NAME="amlws-cfg-ws${suffix}"
+COMPUTE_INSTANCE="amlicfg-ci${suffix}"
+COMPUTE_CLUSTER="amlccfg-aml-cluster"
+ADF_NAME="aadataf-cfg-df${suffix}"
 Azure_POSTGRESQL_NAME="azpostsql-cfg-psql${suffix}"
 USERNAME="citus"
 PASSWORD="Fhtest208"
@@ -57,6 +57,7 @@ az datafactory create --resource-group $RESOURCE_GROUP --factory-name $ADF_NAME
 # Create Azure Database for postgresql
 echo "Creating a Azure data base for postgresql with name: " $Azure_POSTGRESQL_NAME
 #az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --public-access 153.24.26.117 --storage-size 128 --tags "key=value" --version 14 --high-availability "Disabled (99.9% SLA)" --authentication-type "PostgreSQL authentication only"  --zone 1 --standby-zone 3
-az postgres flexible-server create  --resource-group $RESOURCE_GROUP  --name $Azure_POSTGRESQL_NAME  --admin-user $USERNAME --admin-password $PASSWORD  --sku-name Standard_D2s_v3 --tier GeneralPurpose - --storage-size 128 --tags "128" --version 14 --high-availability Disabled
-echo "Username of postgresql is  " $USERNAME
-echo "Password of postgresql is  " $PASSWORD
+az postgres flexible-server create  --location westus --resource-group $RESOURCE_GROUP  --name $Azure_POSTGRESQL_NAME  --admin-user $USERNAME --admin-password $PASSWORD  --sku-name Standard_D2s_v3 --tier GeneralPurpose - --storage-size 128 --tags "128" --version 14 --high-availability Disabled
+echo "Username of postgresql is  " : $USERNAME
+echo "Password of postgresql is  " : $PASSWORD
+echo " Azure postgresql got created " : $Azure_POSTGRESQL_NAME
