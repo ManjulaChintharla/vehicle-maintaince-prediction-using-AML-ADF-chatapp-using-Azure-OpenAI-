@@ -41,7 +41,7 @@ echo "Create an Azure Machine Learning workspace:"
 az ml workspace create --name $WORKSPACE_NAME 
 az configure --defaults workspace=$WORKSPACE_NAME 
 
-# Create compute instance
+# Creatcompute instance
 echo "Creating a compute instance with name: " $COMPUTE_INSTANCE
 az ml compute create --name ${COMPUTE_INSTANCE} --size Standard_DS3_v2 --type ComputeInstance 
 
@@ -53,6 +53,20 @@ az ml compute create --name ${COMPUTE_CLUSTER} --size Standard_DS3_v2 --max-inst
 echo "Creating a Azure data factory with name: " $ADF_NAME
 az datafactory create --resource-group $RESOURCE_GROUP --factory-name $ADF_NAME
 
+# Assign the managed identity ID to a variable
+ManagedIdentityId=$(az datafactory show --name $ADF_NAME --resource-group $RESOURCE_GROUP --query identity.principalId --output tsv)
+
+# Create a Key Vault policy using the managed identity ID
+az keyvault set-policy --name <KeyVaultName> --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
+
+# Search for the Key Vault by name
+keyVaultName=$(az keyvault list --query "[?contains(name, 'amlws-cfg-ws')].name | [0]" --output tsv)
+
+# Assign the Key Vault name to a variable
+keyVaultName=$(az keyvault list --query "[?contains(name, '<KeyVaultNamePattern>')].name | [0]" --output tsv)
+
+# Create a Key Vault policy using the Key Vault name
+az keyvault set-policy --name $keyVaultName --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
 
 # Create Azure Database for postgresql
 echo "Creating a Azure data base for postgresql with name: " $Azure_POSTGRESQL_NAME
@@ -61,3 +75,5 @@ az postgres flexible-server create  --location westus --resource-group $RESOURCE
 echo "Username of postgresql is  " : $USERNAME
 echo "Password of postgresql is  " : $PASSWORD
 echo " Azure postgresql got created " : $Azure_POSTGRESQL_NAME
+
+
