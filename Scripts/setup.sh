@@ -70,10 +70,17 @@ keyVaultName=$(az keyvault list --query "[?contains(name, '<KeyVaultNamePattern>
 # Create a Key Vault policy using the Key Vault name
 az keyvault set-policy --name $keyVaultName --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
 
+# Search for the storage account by name pattern
+storageAccountName=$(az storage account list --query "[?contains(name, 'amlwscfgstorage')].name | [0]" --output tsv)
+
+
 # Create Azure Database for postgresql
 echo "Creating a Azure data base for postgresql with name: " $Azure_POSTGRESQL_NAME
 #az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --public-access 153.24.26.117 --storage-size 128 --tags "key=value" --version 14 --high-availability "Disabled (99.9% SLA)" --authentication-type "PostgreSQL authentication only"  --zone 1 --standby-zone 3
 az postgres flexible-server create  --location westus --resource-group $RESOURCE_GROUP  --name $Azure_POSTGRESQL_NAME  --admin-user $USERNAME --admin-password $PASSWORD  --sku-name Standard_D2s_v3 --tier GeneralPurpose - --storage-size 128 --tags "128" --version 14 --high-availability Disabled
+# Create the PostgreSQL flexible server using the storage account
+az postgres flexible-server create --resource-group $RESOURCE_GROUP --location westus --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3  --storage-size 128 --backup-retention 10 --version 14 --storage-account $storageAccountName
+
 echo "Username of postgresql is  " : $USERNAME
 echo "Password of postgresql is  " : $PASSWORD
 echo " Azure postgresql got created " : $Azure_POSTGRESQL_NAME
