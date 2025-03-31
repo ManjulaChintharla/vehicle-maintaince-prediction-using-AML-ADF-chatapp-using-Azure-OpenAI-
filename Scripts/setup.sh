@@ -63,7 +63,7 @@ ManagedIdentityId=$(az datafactory show --name $ADF_NAME --resource-group $RESOU
 keyVaultName=$(az keyvault list --query "[?contains(name, 'amlwscfgkeyvault')].name | [0]" --output tsv)
 
 # Get the Key Vault Scope
-KEY_VAULT_SCOPE="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ RESOURCE_GROUP /providers/Microsoft.KeyVault/vaults/$ keyVaultName"
+KEY_VAULT_SCOPE="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ RESOURCE_GROUP /providers/Microsoft.KeyVault/vaults/$keyVaultName"
 
 # Grant "Key Vault Secrets User" role (for secret access)
 az role assignment create --assignee $ManagedIdentityId  --role "Key Vault Secrets User"   --scope "$KEY_VAULT_SCOPE"
@@ -94,6 +94,7 @@ storageAccountName=$(az storage account list --query "[?contains(name, 'amlwscfg
 #az postgres flexible-server create  --location westus --resource-group $RESOURCE_GROUP  --name $Azure_POSTGRESQL_NAME  --admin-user $USERNAME --admin-password $PASSWORD  --sku-name Standard_D2s_v3 --tier GeneralPurpose - --storage-size 128 --tags "128" --version 14 --high-availability Disabled
 # Create the PostgreSQL flexible server using the storage account
 # PostgreSQL server creation with corrected syntax
+
 echo "Creating an Azure database for PostgreSQL with name: $Azure_POSTGRESQL_NAME"
 
 az postgres flexible-server create --location westus --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --storage-size 128 --tags "Environment=Dev" --version 14 --high-availability Disabled --public-access All
