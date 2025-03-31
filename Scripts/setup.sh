@@ -21,7 +21,8 @@ ADF_NAME="aadataf-cfg-df${suffix}"
 Azure_POSTGRESQL_NAME="azpostsql-cfg-psql${suffix}"
 USERNAME="citus"
 PASSWORD="Fhtest208"
-
+# Get the subscription ID
+SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 
 
 # Registring the Azure Machine Learning resource provider in the subscription
@@ -61,11 +62,27 @@ ManagedIdentityId=$(az datafactory show --name $ADF_NAME --resource-group $RESOU
 # Search for the Key Vault by name
 keyVaultName=$(az keyvault list --query "[?contains(name, 'amlwscfgkeyvault')].name | [0]" --output tsv)
 
+# Get the Key Vault Scope
+KEY_VAULT_SCOPE="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ RESOURCE_GROUP /providers/Microsoft.KeyVault/vaults/$ keyVaultName"
+
+# Grant "Key Vault Secrets User" role (for secret access)
+az role assignment create --assignee $ManagedIdentityId  --role "Key Vault Secrets User"   --scope "$KEY_VAULT_SCOPE"
+
+# Grant "Key Vault Crypto User" role (for key access)
+az role assignment create --assignee $ManagedIdentityId   --role "Key Vault Crypto User"     --scope "$KEY_VAULT_SCOPE"
+
+# Grant "Key Vault Certificates Officer" role (for certificate access)
+az role assignment create --assignee $ManagedIdentityId  --role "Key Vault Certificates Officer" --scope "$KEY_VAULT_SCOPE"
+
+
 # Assign RBAC role to managed identity
 az role assignment create --assignee $ManagedIdentityId --role "Key Vault Secrets User" --scope "/subscriptions/$(az account show --query id --output tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$keyVaultName"
 
-# Create a Key Vault policy using the Key Vault name
-#az keyvault set-policy --name $keyVaultName --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
+# Switch Key Vault to Vault Access Policy Mode
+az keyvault update --name $keyVaultName  --resource-group $RESOURCE_GROUP --enable-rbac-authorization false
+
+# Create Access Policy for ADF Managed Identity
+az keyvault set-policy   --name $keyVaultName  --resource-group $RESOURCE_GROUP   --object-id $ManagedIdentityId   --secret-permissions get list   --key-permissions get list    --certificate-permissions get list
 
 # Search for the storage account by name pattern
 storageAccountName=$(az storage account list --query "[?contains(name, 'amlwscfgstorage')].name | [0]" --output tsv)
