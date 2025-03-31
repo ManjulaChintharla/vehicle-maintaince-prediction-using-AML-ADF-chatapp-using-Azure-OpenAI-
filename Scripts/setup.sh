@@ -60,7 +60,7 @@ ManagedIdentityId=$(az datafactory show --name $ADF_NAME --resource-group $RESOU
 az keyvault set-policy --name <KeyVaultName> --resource-group $RESOURCE_GROUP --object-id $ManagedIdentityId --secret-permissions get list
 
 # Search for the Key Vault by name
-keyVaultName=$(az keyvault list --query "[?contains(name, 'amlws-cfg-ws')].name | [0]" --output tsv)
+keyVaultName=$(az keyvault list --query "[?contains(name, 'amlwscfgkeyvault')].name | [0]" --output tsv)
 
 # Assign the Key Vault name to a variable
 keyVaultName=$(az keyvault list --query "[?contains(name, '<KeyVaultNamePattern>')].name | [0]" --output tsv)
