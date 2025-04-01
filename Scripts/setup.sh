@@ -21,6 +21,9 @@ ADF_NAME="aadataf-cfg-df${suffix}"
 Azure_POSTGRESQL_NAME="azpostsql-cfg-psql${suffix}"
 USERNAME="citus"
 PASSWORD="Fhtest208"
+POSTGRESQL_PORT="5432"
+DB_NAME="postgres"
+
 # Get the subscription ID
 SUBSCRIPTION_ID=$(az account show --query id --output tsv)
 TENANT_ID=$(az account show --query tenantId --output tsv)
@@ -30,10 +33,10 @@ USER_OBJECT_ID=$(az ad signed-in-user show --query id --output tsv)
 
 # Check if the USER_OBJECT_ID is empty or null
 if [ -z "$USER_OBJECT_ID" ]; then
-    echo "❌ Error: Unable to retrieve the User Object ID. Please check your Azure CLI login or permissions."
+    echo "Error: Unable to retrieve the User Object ID. Please check your Azure CLI login or permissions."
     exit 1
 else
-    echo "✅ User Object ID: $USER_OBJECT_ID"
+    echo "User Object ID: $USER_OBJECT_ID"
 fi
 
 # Assign roles to the current user
@@ -127,5 +130,63 @@ az postgres flexible-server create --location westus --resource-group $RESOURCE_
 echo "Username of postgresql is  " : $USERNAME
 echo "Password of postgresql is  " : $PASSWORD
 echo " Azure postgresql got created " : $Azure_POSTGRESQL_NAME
+
+### Linking Storage account and Postgresql to ADF
+
+# Get Storage Account Key
+STORAGE_ACCOUNT_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP --account-name $storageAccountName --query '[0].value' --output tsv)
+
+# Link Storage Account
+echo "🔗 Linking Azure Storage to ADF..."
+
+az datafactory linked-service create \
+    --resource-group $RESOURCE_GROUP \
+    --factory-name $ADF_NAME \
+    --name "BlobStorageLinkedService" \
+    --properties '{
+        "type": "AzureBlobStorage",
+        "typeProperties": {
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName='$storageAccountName';AccountKey='$STORAGE_ACCOUNT_KEY';EndpointSuffix=core.windows.net"
+        }
+    }'
+
+# Link PostgreSQL
+echo "🔗 Linking PostgreSQL to ADF..."
+az datafactory linked-service create \
+    --resource-group $RESOURCE_GROUP \
+    --factory-name $ADF_NAME \
+    --name "PostgreSQLLinkedService" \
+    --properties '{
+        "type": "AzurePostgreSql",
+        "typeProperties": {
+            "connectionString": "Host='$Azure_POSTGRESQL_NAME'.postgres.database.azure.com;Port='$POSTGRESQL_PORT';Database='$DB_NAME';User Id='$USERNAME';Password='$PASSWORD';"
+        }
+    }'
+
+    
+/*
+DB_NAME=$(az postgres flexible-server db list \
+    --resource-group $RESOURCE_GROUP \
+    --server-name $POSTGRES_SERVER_NAME \
+    --query "[?name=='$NEW_DB_NAME'].name" --output tsv)
+    ------
+    #Check if the database was created successfully:
+    az postgres flexible-server db list \
+    --resource-group $RESOURCE_GROUP \
+    --server-name $POSTGRES_SERVER_NAME \
+    --query "[].name" --output table
+
+*/
+# Test Storage Connection
+echo "🔍 Testing Storage Connection..."
+az datafactory linked-service test-connectivity  --resource-group $RESOURCE_GROUP  --factory-name $ADF_NAME --name "BlobStorageLinkedService"
+
+# Test PostgreSQL Connection
+echo "🔍 Testing PostgreSQL Connection..."
+
+az datafactory linked-service test-connectivity --resource-group $RESOURCE_GROUP --factory-name $ADF_NAME --name "PostgreSQLLinkedService"
+
+echo "✅ All connections tested successfully!"
+
 
 
