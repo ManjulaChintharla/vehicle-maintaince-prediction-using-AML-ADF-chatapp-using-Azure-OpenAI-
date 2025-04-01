@@ -26,7 +26,7 @@ Azure_POSTGRESQL_NAME="azpostsql-cfg-psql${suffix}"
 USERNAME="citus"
 PASSWORD="Fhtest208"
 POSTGRESQL_PORT="5432"
-DB_NAME="postgres"
+DB_NAME="flexibleserverdb"
 CONTAINER_NAME="fleetdata"
 RULE_NAME="AllowClientIP"
 
