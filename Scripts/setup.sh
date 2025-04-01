@@ -28,6 +28,7 @@ PASSWORD="Fhtest208"
 POSTGRESQL_PORT="5432"
 DB_NAME="postgres"
 CONTAINER_NAME="fleetdata"
+RULE_NAME="AllowClientIP"
 
 
 # Get the subscription ID
@@ -131,12 +132,26 @@ az role assignment create --assignee $(az account show --query user.name --outpu
 
 echo "Creating an Azure database for PostgreSQL with name: $Azure_POSTGRESQL_NAME"
 
-az postgres flexible-server create --location westus --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --storage-size 128 --tags "Environment=Dev" --version 14 --high-availability Disabled --public-access All
+az postgres flexible-server create --location westus --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --storage-size 128 --tags "Environment=Dev" --version 14 --high-availability Disabled --public-access Enabled
 
 
 echo "Username of postgresql is  " : $USERNAME
 echo "Password of postgresql is  " : $PASSWORD
 echo " Azure postgresql got created " : $Azure_POSTGRESQL_NAME
+
+# Get Client's Public IP Address
+CLIENT_IP=$(curl -s https://api64.ipify.org)
+
+# Add Client IP to Firewall Rules
+echo "Adding client IP ($CLIENT_IP) to firewall..."
+az postgres flexible-server firewall-rule create \
+    --resource-group $RESOURCE_GROUP \
+    --name $Azure_POSTGRESQL_NAME \
+    --rule-name $RULE_NAME \
+    --start-ip-address $CLIENT_IP \
+    --end-ip-address $CLIENT_IP
+
+echo "Azure_POSTGRESQL Configuration completed!"
 
 ### Linking Storage account and Postgresql to ADF
 
