@@ -23,6 +23,7 @@ USERNAME="citus"
 PASSWORD="Fhtest208"
 POSTGRESQL_PORT="5432"
 DB_NAME="postgres"
+CONTAINER_NAME="fleetdata"
 
 # Get the subscription ID
 SUBSCRIPTION_ID=$(az account show --query id --output tsv)
@@ -187,5 +188,25 @@ az datafactory linked-service test-connectivity --resource-group $RESOURCE_GROUP
 
 echo "✅ All connections tested successfully!"
 
+# Create a Container in Azure Storage Account
+# Create the Container
+echo "🚀 Creating container: $CONTAINER_NAME..."
+az storage container create \
+    --name $CONTAINER_NAME \
+    --account-name $storageAccountName \
+    --resource-group $RESOURCE_GROUP \
+    --auth-mode login
 
+# Assign the Container Name to a Variable
+CONTAINER=$(az storage container list \
+    --account-name $storageAccountName \
+    --query "[?name=='$CONTAINER_NAME'].name" --output tsv)
+
+# Verify and display the container name
+if [ "$CONTAINER" == "$CONTAINER_NAME" ]; then
+    echo "✅ Storage Container Created: $CONTAINER"
+else
+    echo "❌ Failed to create the container."
+    exit 1
+fi
 
