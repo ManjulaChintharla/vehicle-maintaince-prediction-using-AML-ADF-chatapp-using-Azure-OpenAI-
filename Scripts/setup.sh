@@ -190,10 +190,9 @@ DB_NAME=$(az postgres flexible-server db list \
 
 echo "Creating container: $CONTAINER_NAME..."
 
-az storage container create \
-    --name $CONTAINER_NAME \
-    --account-name $storageAccountName \
-    --auth-mode login  # Secure Authentication
+#az storage container create --name $CONTAINER_NAME --account-name $storageAccountName --auth-mode login  # Secure Authentication
+
+az storage container create --name $CONTAINER_NAME --account-name $storageAccountName
 
 # Assign the Container Name to a Variable
 CONTAINER=$(az storage container list \
