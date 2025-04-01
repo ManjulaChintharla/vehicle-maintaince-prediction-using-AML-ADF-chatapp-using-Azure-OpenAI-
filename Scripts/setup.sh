@@ -41,7 +41,7 @@ az role assignment create --assignee $USER_OBJECT_ID --role "Cognitive Services 
 az role assignment create --assignee $USER_OBJECT_ID --role "Search Service Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID"
 az role assignment create --assignee $USER_OBJECT_ID --role "Azure AI Developer" --scope "/subscriptions/$SUBSCRIPTION_ID"
 
-echo "✅ Roles assigned successfully to User ID: $USER_OBJECT_ID"
+echo "****Roles assigned successfully to User ID: $USER_OBJECT_ID"
 
 
 # Registring the Azure Machine Learning resource provider in the subscription
