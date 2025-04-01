@@ -28,8 +28,13 @@ TENANT_ID=$(az account show --query tenantId --output tsv)
 # Automatically retrieve the current user's Object ID
 USER_OBJECT_ID=$(az ad signed-in-user show --query id --output tsv)
 
-# Print the USER_OBJECT_ID to confirm
-echo "User Object ID: $SUBSCRIPTION_ID"
+# Check if the USER_OBJECT_ID is empty or null
+if [ -z "$USER_OBJECT_ID" ]; then
+    echo "❌ Error: Unable to retrieve the User Object ID. Please check your Azure CLI login or permissions."
+    exit 1
+else
+    echo "✅ User Object ID: $USER_OBJECT_ID"
+fi
 
 # Assign roles to the current user
 az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Data Access Administrator" --scope "/subscriptions/$SUBSCRIPTION_ID"
