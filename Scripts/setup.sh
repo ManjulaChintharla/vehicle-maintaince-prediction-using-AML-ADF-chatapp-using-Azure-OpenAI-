@@ -23,6 +23,25 @@ USERNAME="citus"
 PASSWORD="Fhtest208"
 # Get the subscription ID
 SUBSCRIPTION_ID=$(az account show --query id --output tsv)
+TENANT_ID=$(az account show --query tenantId --output tsv)
+
+# Automatically retrieve the current user's Object ID
+USER_OBJECT_ID=$(az ad signed-in-user show --query id --output tsv)
+
+# Print the USER_OBJECT_ID to confirm
+echo "User Object ID: $SUBSCRIPTION_ID"
+
+# Assign roles to the current user
+az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Data Access Administrator" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Administrator" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "AzureML Compute Operator" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "Search Index Data Reader" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "Cognitive Services Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "Cognitive Services OpenAI User" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "Search Service Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "Azure AI Developer" --scope "/subscriptions/$SUBSCRIPTION_ID"
+
+echo "✅ Roles assigned successfully to User ID: $USER_OBJECT_ID"
 
 
 # Registring the Azure Machine Learning resource provider in the subscription
