@@ -24,6 +24,8 @@ PASSWORD="Fhtest208"
 POSTGRESQL_PORT="5432"
 DB_NAME="postgres"
 CONTAINER_NAME="fleetdata"
+# loginto Azure portal
+az login
 
 # Get the subscription ID
 SUBSCRIPTION_ID=$(az account show --query id --output tsv)
