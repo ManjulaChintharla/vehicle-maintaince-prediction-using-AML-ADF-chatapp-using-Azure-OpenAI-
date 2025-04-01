@@ -160,7 +160,8 @@ az datafactory linked-service create \
     --properties '{
         "type": "AzurePostgreSql",
         "typeProperties": {
-            "connectionString": "Host='$Azure_POSTGRESQL_NAME'.postgres.database.azure.com;Port='$POSTGRESQL_PORT';Database='$DB_NAME';User Id='$USERNAME';Password='$PASSWORD';"
+            "connectionString": "Host='$Azure_POSTGRESQL_NAME'.postgres.database.azure.com;Port='$POSTGRESQL_PORT';Database='$DB_NAME';User Id='$USERNAME';Password='$PASSWORD';SslMode=Require;TrustServerCertificate=True;",
+            "version": "1.0"
         }
     }'
 
