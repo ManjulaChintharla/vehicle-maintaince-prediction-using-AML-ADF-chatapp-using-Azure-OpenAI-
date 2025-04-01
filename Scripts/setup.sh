@@ -1,5 +1,9 @@
 #! /usr/bin/sh
 
+echo "🚀 Setting up environment..."
+
+pip install numpy==1.21.4
+
 # Create random string
 guid=$(cat /proc/sys/kernel/random/uuid)
 suffix=${guid//[-]/}
@@ -24,8 +28,7 @@ PASSWORD="Fhtest208"
 POSTGRESQL_PORT="5432"
 DB_NAME="postgres"
 CONTAINER_NAME="fleetdata"
-# loginto Azure portal
-az login
+
 
 # Get the subscription ID
 SUBSCRIPTION_ID=$(az account show --query id --output tsv)
@@ -204,3 +207,4 @@ else
     exit 1
 fi
 
+echo "✅ Environment setup complete!"
