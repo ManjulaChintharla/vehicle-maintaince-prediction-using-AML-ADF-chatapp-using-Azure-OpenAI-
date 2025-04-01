@@ -164,7 +164,7 @@ az datafactory linked-service create \
     }'
 
     
-/*
+: '
 DB_NAME=$(az postgres flexible-server db list \
     --resource-group $RESOURCE_GROUP \
     --server-name $POSTGRES_SERVER_NAME \
@@ -175,8 +175,7 @@ DB_NAME=$(az postgres flexible-server db list \
     --resource-group $RESOURCE_GROUP \
     --server-name $POSTGRES_SERVER_NAME \
     --query "[].name" --output table
-
-*/
+'
 # Test Storage Connection
 echo "🔍 Testing Storage Connection..."
 az datafactory linked-service test-connectivity  --resource-group $RESOURCE_GROUP  --factory-name $ADF_NAME --name "BlobStorageLinkedService"
