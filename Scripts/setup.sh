@@ -55,6 +55,7 @@ az role assignment create --assignee $USER_OBJECT_ID --role "Cognitive Services 
 az role assignment create --assignee $USER_OBJECT_ID --role "Search Service Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID"
 az role assignment create --assignee $USER_OBJECT_ID --role "Azure AI Developer" --scope "/subscriptions/$SUBSCRIPTION_ID"
 
+
 echo "****Roles assigned successfully to User ID: $USER_OBJECT_ID"
 
 
@@ -119,7 +120,7 @@ az keyvault set-policy   --name $keyVaultName  --resource-group $RESOURCE_GROUP 
 
 # Search for the storage account by name pattern
 storageAccountName=$(az storage account list --query "[?contains(name, 'amlwscfgstorage')].name | [0]" --output tsv)
-
+az role assignment create --assignee $(az account show --query user.name --output tsv) --role "Storage Blob Data Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$storageAccountName"
 
 # Create Azure Database for postgresql
 
@@ -186,25 +187,27 @@ DB_NAME=$(az postgres flexible-server db list \
 
 
 # Create a Container in Azure Storage Account
-# Create a Container in Azure Storage Account
-echo "🚀 Creating container: $CONTAINER_NAME..."
+
+echo "Creating container: $CONTAINER_NAME..."
+
 az storage container create \
     --name $CONTAINER_NAME \
     --account-name $storageAccountName \
-    --auth-mode login  # ✅ Secure Authentication
+    --auth-mode login  # Secure Authentication
 
 # Assign the Container Name to a Variable
 CONTAINER=$(az storage container list \
     --account-name $storageAccountName \
     --query "[?name=='$CONTAINER_NAME'].name" --output tsv)
 
+
 # Verify and display the container name
 if [ "$CONTAINER" == "$CONTAINER_NAME" ]; then
-    echo "✅ Storage Container Created: $CONTAINER"
+    echo " Storage Container Created: $CONTAINER"
 else
-    echo "❌ Failed to create the container."
+    echo "Failed to create the container."
     exit 1
 fi
 
 
-echo "✅ Environment setup complete!"
+echo "Environment setup complete!"
