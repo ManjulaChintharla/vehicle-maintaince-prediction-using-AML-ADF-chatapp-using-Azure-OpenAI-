@@ -178,16 +178,7 @@ DB_NAME=$(az postgres flexible-server db list \
     --server-name $POSTGRES_SERVER_NAME \
     --query "[].name" --output table
 '
-# Test Storage Connection
-echo "🔍 Testing Storage Connection..."
-az datafactory linked-service test-connectivity  --resource-group $RESOURCE_GROUP  --factory-name $ADF_NAME --name "BlobStorageLinkedService"
 
-# Test PostgreSQL Connection
-echo "🔍 Testing PostgreSQL Connection..."
-
-az datafactory linked-service test-connectivity --resource-group $RESOURCE_GROUP --factory-name $ADF_NAME --name "PostgreSQLLinkedService"
-
-echo "✅ All connections tested successfully!"
 
 # Create a Container in Azure Storage Account
 # Create the Container
