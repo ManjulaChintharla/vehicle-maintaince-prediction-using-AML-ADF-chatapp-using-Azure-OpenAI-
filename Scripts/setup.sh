@@ -186,13 +186,12 @@ DB_NAME=$(az postgres flexible-server db list \
 
 
 # Create a Container in Azure Storage Account
-# Create the Container
+# Create a Container in Azure Storage Account
 echo "🚀 Creating container: $CONTAINER_NAME..."
 az storage container create \
     --name $CONTAINER_NAME \
     --account-name $storageAccountName \
-    --resource-group $RESOURCE_GROUP \
-    --auth-mode login
+    --auth-mode login  # ✅ Secure Authentication
 
 # Assign the Container Name to a Variable
 CONTAINER=$(az storage container list \
@@ -206,5 +205,6 @@ else
     echo "❌ Failed to create the container."
     exit 1
 fi
+
 
 echo "✅ Environment setup complete!"
