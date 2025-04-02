@@ -127,36 +127,18 @@ az keyvault set-policy   --name $keyVaultName  --resource-group $RESOURCE_GROUP 
 storageAccountName=$(az storage account list --query "[?contains(name, 'amlwscfgstorage')].name | [0]" --output tsv)
 az role assignment create --assignee $(az account show --query user.name --output tsv) --role "Storage Blob Data Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$storageAccountName"
 
-# Create Azure Database for postgresql
 
-#az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --public-access 153.24.26.117 --storage-size 128 --tags "key=value" --version 14 --high-availability "Disabled (99.9% SLA)" --authentication-type "PostgreSQL authentication only"  --zone 1 --standby-zone 3
-#az postgres flexible-server create  --location westus --resource-group $RESOURCE_GROUP  --name $Azure_POSTGRESQL_NAME  --admin-user $USERNAME --admin-password $PASSWORD  --sku-name Standard_D2s_v3 --tier GeneralPurpose - --storage-size 128 --tags "128" --version 14 --high-availability Disabled
+
+
 # Create the PostgreSQL flexible server using the storage account
-# PostgreSQL server creation with corrected syntax
 
 echo "Creating an Azure database for PostgreSQL with name: $Azure_POSTGRESQL_NAME"
 
-az postgres flexible-server create --location westus --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --storage-size 128 --tags "Environment=Dev" --version 14 --high-availability Disabled --public-access Enabled
-az postgres flexible-server firewall-rule create --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --rule-name "AllowAllAzureServices"  --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
-
+az postgres flexible-server create --location westus --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --storage-size 128 --tags "Environment=Dev" --version 14 --high-availability Disabled --public-access All
 
 echo "Username of postgresql is  " : $USERNAME
 echo "Password of postgresql is  " : $PASSWORD
 echo " Azure postgresql got created " : $Azure_POSTGRESQL_NAME
-
-# Get Client's Public IP Address
-CLIENT_IP=$(curl -s https://api64.ipify.org)
-
-# Add Client IP to Firewall Rules
-echo "Adding client IP ($CLIENT_IP) to firewall..."
-az postgres flexible-server firewall-rule create \
-    --resource-group $RESOURCE_GROUP \
-    --name $Azure_POSTGRESQL_NAME \
-    --rule-name $RULE_NAME \
-    --start-ip-address $CLIENT_IP \
-    --end-ip-address $CLIENT_IP
-
-echo "Azure_POSTGRESQL Configuration completed!"
 
 ### Linking Storage account and Postgresql to ADF
 
