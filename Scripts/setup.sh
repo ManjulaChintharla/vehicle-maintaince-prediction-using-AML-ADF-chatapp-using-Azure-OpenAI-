@@ -2,8 +2,7 @@
 
 echo "Setting up environment..."
 
-pip install numpy==1.21.4
-pip install threadpoolctl==3.1.0
+az login
 
 # Create random string
 guid=$(cat /proc/sys/kernel/random/uuid)
