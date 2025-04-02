@@ -17,6 +17,7 @@ RESOURCE_PROVIDER1="Microsoft.PolicyInsights"
 RESOURCE_PROVIDER2="Microsoft.Cdn"
 RESOURCE_PROVIDER3="Microsoft.AlertsManagement"
 RESOURCE_PROVIDER4="Microsoft.Web"
+RESOURCE_PROVIDER5="Microsoft.DBforPostgreSQL"
 REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
 WORKSPACE_NAME="amlws-cfg-ws${suffix}"
@@ -68,6 +69,7 @@ az provider register --namespace $RESOURCE_PROVIDER1
 az provider register --namespace $RESOURCE_PROVIDER2
 az provider register --namespace $RESOURCE_PROVIDER3
 az provider register --namespace $RESOURCE_PROVIDER4
+az provider register --namespace $RESOURCE_PROVIDER5
 
 # Creating the resource group , workspace and setting to default
 echo "Create a resource group and set as default:"
