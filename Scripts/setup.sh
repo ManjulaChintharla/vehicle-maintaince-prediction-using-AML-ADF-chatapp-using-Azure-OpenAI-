@@ -57,6 +57,7 @@ az role assignment create --assignee $USER_OBJECT_ID --role "Cognitive Services 
 az role assignment create --assignee $USER_OBJECT_ID --role "Cognitive Services OpenAI User" --scope "/subscriptions/$SUBSCRIPTION_ID"
 az role assignment create --assignee $USER_OBJECT_ID --role "Search Service Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID"
 az role assignment create --assignee $USER_OBJECT_ID --role "Azure AI Developer" --scope "/subscriptions/$SUBSCRIPTION_ID"
+az role assignment create --assignee $USER_OBJECT_ID --role "Storage Blob Data Contributor" --scope "/subscriptions/$SUBSCRIPTION_ID"
 
 
 echo "****Roles assigned successfully to User ID: $USER_OBJECT_ID"
@@ -208,9 +209,9 @@ DB_NAME=$(az postgres flexible-server db list \
 
 echo "Creating container: $CONTAINER_NAME..."
 
-#az storage container create --name $CONTAINER_NAME --account-name $storageAccountName --auth-mode login  # Secure Authentication
+az storage container create --name $CONTAINER_NAME --account-name $storageAccountName --auth-mode login  # Secure Authentication
 
-az storage container create --name $CONTAINER_NAME --account-name $storageAccountName
+#az storage container create --name $CONTAINER_NAME --account-name $storageAccountName
 
 # Assign the Container Name to a Variable
 CONTAINER=$(az storage container list \
