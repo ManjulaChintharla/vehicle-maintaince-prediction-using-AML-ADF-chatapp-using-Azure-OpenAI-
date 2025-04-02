@@ -86,7 +86,7 @@ az ml compute create --name ${COMPUTE_INSTANCE} --size Standard_DS3_v2 --type Co
 
 # Create compute cluster
 echo "Creating a compute cluster with name: " $COMPUTE_CLUSTER
-az ml compute create --name ${COMPUTE_CLUSTER} --size Standard_DS3_v2 --max-instances 2 --type AmlCompute 
+az ml compute create --name ${COMPUTE_CLUSTER} --size Standard_E4ds_v4 --max-instances 2 --type AmlCompute 
 
 az config set extension.use_dynamic_install=yes_without_prompt
 
@@ -129,11 +129,10 @@ az role assignment create --assignee $(az account show --query user.name --outpu
 
 
 
-# Create the PostgreSQL flexible server using the storage account
 
 echo "Creating an Azure database for PostgreSQL with name: $Azure_POSTGRESQL_NAME"
 
-az postgres flexible-server create --location westus --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --storage-size 128 --tags "Environment=Dev" --version 14 --high-availability Disabled --public-access All
+#az postgres flexible-server create --location westus --resource-group $RESOURCE_GROUP --name $Azure_POSTGRESQL_NAME --admin-user $USERNAME --admin-password $PASSWORD --sku-name Standard_D2s_v3 --tier GeneralPurpose --storage-size 128 --tags "Environment=Dev" --version 14 --high-availability Disabled --public-access All
 
 
 
