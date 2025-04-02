@@ -1,6 +1,6 @@
 #! /usr/bin/sh
 
-echo "🚀 Setting up environment..."
+echo "Setting up environment..."
 
 pip install numpy==1.21.4
 pip install threadpoolctl==3.1.0
