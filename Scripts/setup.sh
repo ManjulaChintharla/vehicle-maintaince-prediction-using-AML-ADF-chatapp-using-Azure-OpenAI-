@@ -215,5 +215,12 @@ az storage blob upload --account-name $storageAccountName --container-name $CONT
 #Create Azure OpenAI service
 az cognitiveservices account create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --location $RANDOM_REGION --kind OpenAI --sku S0  --yes
 
+#Deploy text embedding models
+az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name embeddings --model-name text-embedding-ada-002 --model-version 2 --sku S0
+
+#Deploy chat completion models
+az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name completions --model-name gpt-4-turbo --model-version 0163 --sku S0
+
+
 
 echo "Environment setup complete!"
