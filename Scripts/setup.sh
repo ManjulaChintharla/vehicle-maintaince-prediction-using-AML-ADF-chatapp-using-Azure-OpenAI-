@@ -30,7 +30,7 @@ POSTGRESQL_PORT="5432"
 DB_NAME="flexibleserverdb"
 CONTAINER_NAME="fleetdata"
 RULE_NAME="AllowClientIP"
-
+AZURE_OPENAI_NAME="fleetazai${suffix}"
 
 # Get the subscription ID
 SUBSCRIPTION_ID=$(az account show --query id --output tsv)
@@ -210,7 +210,10 @@ else
     exit 1
 fi
 # move fleet_data file to the storage account container.
-az storage blob upload --account-name $storageAccountName --container-name $CONTAINER --name fleet_data.csv --file ../Data/fleet_data_10k.csv --auth-mode key
+az storage blob upload --account-name $storageAccountName --container-name $CONTAINER_NAME --name fleet_data.csv --file ../Data/fleet_data_10k.csv --auth-mode key
+
+#Create Azure OpenAI service
+az cognitiveservices account create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --location $RANDOM_REGION --kind OpenAI --sku S0  --yes
 
 
 echo "Environment setup complete!"
