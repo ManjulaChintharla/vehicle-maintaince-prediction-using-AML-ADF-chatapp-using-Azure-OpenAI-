@@ -209,6 +209,8 @@ else
     echo "Failed to create the container."
     exit 1
 fi
+# move fleet_data file to the storage account container.
+az storage blob upload --account-name $storageAccountName --container-name $CONTAINER --name fleet_data.csv --file ../Data/fleet_data_10k.csv --auth-mode key
 
 
 echo "Environment setup complete!"
