@@ -1,5 +1,6 @@
 import psycopg2
 from docx import Document
+import os
 
 # Database connection details
 DB_NAME = "your_database"
@@ -19,8 +20,10 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 
 # Load the document
-doc_path = "Data/Fleet_Maintenance_Tips.docx"
-document = Document(doc_path)
+
+doc_path = os.path.abspath("Data/Fleet_Maintenance_Tips.docx")
+print(f"Using document path: {doc_path}")
+
 
 # Parse and insert data
 parameter = None
