@@ -19,10 +19,20 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
-# Load the document
-
+# Get absolute path to the document
 doc_path = os.path.abspath("Data/Fleet_Maintenance_Tips.docx")
 print(f"Using document path: {doc_path}")
+
+# Ensure the file exists before reading
+if not os.path.exists(doc_path):
+    print(f"Error: File '{doc_path}' not found!")
+    exit(1)  # Exit script if file is missing
+
+# Load the document
+document = Document(doc_path)  # ✅ Fix: Define `document`
+
+# Read and print paragraphs
+for para in document.paragraphs:
 
 
 # Parse and insert data
