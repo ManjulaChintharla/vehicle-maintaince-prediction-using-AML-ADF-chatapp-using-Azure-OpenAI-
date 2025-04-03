@@ -31,21 +31,17 @@ if not os.path.exists(doc_path):
 # Load the document
 document = Document(doc_path)  # ✅ Fix: Define `document`
 
-# Read and print paragraphs
-for para in document.paragraphs:
-
-
 # Parse and insert data
 parameter = None
 for para in document.paragraphs:
     text = para.text.strip()
-    
+
     # Identify sections (parameters) like "Engine Health", "Vehicle Speed Sensor"
     if text and not text.isnumeric() and len(text.split()) < 5:
-        parameter = text
-    
+        parameter = text  # Store the parameter name
+
     # Identify threshold, condition, tip, and cost (assuming table-like structure in doc)
-    elif text and " - " in text:  
+    elif text and " - " in text:
         parts = text.split(" - ")
         if len(parts) == 4:
             threshold, condition, maintenance_tip, estimated_cost = parts
@@ -61,4 +57,4 @@ conn.commit()
 cursor.close()
 conn.close()
 
-print("Fleet maintenance tips successfully uploaded to PostgreSQL.")
+print("✅ Fleet maintenance tips successfully uploaded to PostgreSQL.")
