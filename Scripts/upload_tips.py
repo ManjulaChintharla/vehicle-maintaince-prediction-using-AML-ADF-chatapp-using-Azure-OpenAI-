@@ -19,7 +19,7 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 
 # Load the document
-doc_path = "Fleet_Maintenance_Tips.docx"
+doc_path = "Data/Fleet_Maintenance_Tips.docx"
 document = Document(doc_path)
 
 # Parse and insert data
