@@ -17,7 +17,8 @@ RESOURCE_PROVIDER2="Microsoft.Cdn"
 RESOURCE_PROVIDER3="Microsoft.AlertsManagement"
 RESOURCE_PROVIDER4="Microsoft.Web"
 RESOURCE_PROVIDER5="Microsoft.DBforPostgreSQL"
-REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
+# REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
+REGIONS=("eastus" "westus" "centralus" )
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
 WORKSPACE_NAME="amlws-cfg-ws${suffix}"
 COMPUTE_INSTANCE="amlicfg-ci${suffix}"
@@ -216,10 +217,12 @@ az storage blob upload --account-name $storageAccountName --container-name $CONT
 az cognitiveservices account create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --location $RANDOM_REGION --kind OpenAI --sku S0  --yes
 
 #Deploy text embedding models
-az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name embeddings --model-name text-embedding-ada-002 --model-version 2 --sku S0
+# az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name embeddings --model-name text-embedding-ada-002 --model-version 2 --sku S0
+az cognitiveservices account deployment create -g $RESOURCE_GROUP -n $AZURE_OPENAI_NAME  --deployment-name embeddings  --model-name text-embedding-ada-002 --model-version "2" --model-format OpenAI --sku-capacity 1 --sku-name "Standard"
 
 #Deploy chat completion models
-az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name completions --model-name gpt-4-turbo --model-version 0163 --sku S0
+#az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name completions --model-name gpt-4-turbo --model-version 0163 --sku S0
+az cognitiveservices account deployment create -g $RESOURCE_GROUP -n $AZURE_OPENAI_NAME  --deployment-name completions  --model-name gpt-4-turbo --model-version "0125" --model-format OpenAI --sku-capacity 1 --sku-name "Standard"
 
 
 
