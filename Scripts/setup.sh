@@ -19,7 +19,9 @@ RESOURCE_PROVIDER4="Microsoft.Web"
 RESOURCE_PROVIDER5="Microsoft.DBforPostgreSQL"
 # REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
 REGIONS=("eastus" "westus" "centralus" )
+AIREGIONS=("eastus" "southcentralus" )
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
+AI_REGION=${AIREGIONS[$RANDOM % ${#AIREGIONS[@]}]}
 WORKSPACE_NAME="amlws-cfg-ws${suffix}"
 COMPUTE_INSTANCE="amlicfg-ci${suffix}"
 COMPUTE_CLUSTER="amlccfg-aml-cluster"
@@ -214,7 +216,7 @@ fi
 az storage blob upload --account-name $storageAccountName --container-name $CONTAINER_NAME --name fleet_data.csv --file ../Data/fleet_data_10k.csv --auth-mode key
 
 #Create Azure OpenAI service
-az cognitiveservices account create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --location $RANDOM_REGION --kind OpenAI --sku S0  --yes
+az cognitiveservices account create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --location $AI_REGION --kind OpenAI --sku S0  --yes
 
 #Deploy text embedding models
 # az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name embeddings --model-name text-embedding-ada-002 --model-version 2 --sku S0
