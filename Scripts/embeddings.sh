@@ -1,3 +1,5 @@
+#This script connects to your PostgreSQL database, retrieves the embeddings, formats them into JSON, and uploads them to Azure AI Search.
+
 import psycopg2
 import requests
 import json
