@@ -218,6 +218,9 @@ az storage blob upload --account-name $storageAccountName --container-name $CONT
 #Create Azure OpenAI service
 az cognitiveservices account create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --location $AI_REGION --kind OpenAI --sku S0  --yes
 
+#Create AzureAI Search service
+az search service create  --name fleet-search-service  --resource-group $RESOURCE_GROUP --location $AI_REGION  --sku basic
+
 #Deploy text embedding models
 # az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name embeddings --model-name text-embedding-ada-002 --model-version 2 --sku S0
 az cognitiveservices account deployment create -g $RESOURCE_GROUP -n $AZURE_OPENAI_NAME  --deployment-name embeddings  --model-name text-embedding-ada-002 --model-version "2" --model-format OpenAI --sku-capacity 1 --sku-name "Standard"
