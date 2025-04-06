@@ -34,6 +34,7 @@ DB_NAME="flexibleserverdb"
 CONTAINER_NAME="fleetdata"
 RULE_NAME="AllowClientIP"
 AZURE_OPENAI_NAME="fleetazai${suffix}"
+AZURE_SEARCH="fleet-search-service${suffix}"
 
 # Get the subscription ID
 SUBSCRIPTION_ID=$(az account show --query id --output tsv)
@@ -219,7 +220,7 @@ az storage blob upload --account-name $storageAccountName --container-name $CONT
 az cognitiveservices account create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --location $AI_REGION --kind OpenAI --sku S0  --yes
 
 #Create AzureAI Search service
-az search service create  --name fleet-search-service  --resource-group $RESOURCE_GROUP --location $AI_REGION  --sku basic
+az search service create  --name $AZURE_SEARCH --resource-group $RESOURCE_GROUP --location $AI_REGION  --sku basic
 
 #Deploy text embedding models
 # az cognitiveservices account deployment create --name $AZURE_OPENAI_NAME --resource-group $RESOURCE_GROUP --deployment-name embeddings --model-name text-embedding-ada-002 --model-version 2 --sku S0
